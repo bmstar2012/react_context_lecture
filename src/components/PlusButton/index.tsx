@@ -2,6 +2,7 @@ import {useContext, useEffect, useState} from 'react';
 import { CountContext } from '../../context/count';
 
 export const PlusButton = () => {
+    console.log("useEffect");
   const { plusCount } = useContext(CountContext);
   const [currency, setCurrency] = useState(0);
   useEffect(() => {
