@@ -1,11 +1,19 @@
 import React, {createContext, useState, useReducer, useContext} from 'react';
 
+interface ICountContext {
+  count: number;
+  plusCount(): void;
+  minusCount(): void;
+}
 
-const CountContext = createContext({
+const CountContext = React.createContext<ICountContext>({
   count: 0,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   plusCount: () => {
   },
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  minusCount: () => {
+  }
 });
 
 interface Props {
@@ -80,19 +88,21 @@ interface StateContextType {
 }
 
 // const StateContext = createContext<State | undefined>(undefined);
-// const StateContext = createContext<StateContextType>({state: {status: ConfigStatus.Fetching}, dispatch: (action: Action) => {}});
 const StateContext = createContext<StateContextType | undefined>(undefined);
 
 // const DispatchContext = createContext<Dispatch | undefined>(undefined);
-const CountProvider = ({children}: Props): JSX.Element => {
+export const CountProvider = ({children}: Props): JSX.Element => {
   const [count, setCount] = useState(0);
   const [state, dispatch] = useReducer(configReducer, {
     status: ConfigStatus.Fetching,
   });
-  console.log('CountProvider', state);
 
   const plusCount = (): void => {
     setCount(count + 1);
+  };
+
+  const minusCount = (): void => {
+    setCount(count - 1);
   };
 
   // eslint-disable-next-line react/react-in-jsx-scope
@@ -102,6 +112,7 @@ const CountProvider = ({children}: Props): JSX.Element => {
           value={{
             count,
             plusCount,
+            minusCount
           }}>
           {children}
         </CountContext.Provider>
@@ -109,7 +120,9 @@ const CountProvider = ({children}: Props): JSX.Element => {
   );
 };
 
-function useConfigDispatch() {
+export const useCountProvider = () => useContext(CountContext);
+
+export const useConfigDispatch = () => {
   const stateContext = useContext(StateContext);
   const dispatch = stateContext?.dispatch;
   if (!dispatch) {
@@ -121,5 +134,3 @@ function useConfigDispatch() {
   // })};
   return dispatch;
 }
-
-export {CountContext, CountProvider, useConfigDispatch};

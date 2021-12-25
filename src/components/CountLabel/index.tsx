@@ -1,7 +1,7 @@
 import React, { useContext} from 'react';
-import { CountContext } from '../../context/count';
+import { useCountProvider } from '../../context/count';
 
 export const CountLabel = () => {
-  const { count } = useContext(CountContext);
+  const { count } = useCountProvider();
   return <div>{count}</div>;
 };
